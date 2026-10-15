@@ -12,4 +12,6 @@ public class GameContext
     {
         _gameApplication = gameApplication;
     }
+
+    public void Stop() => _gameApplication.Stop();
 }

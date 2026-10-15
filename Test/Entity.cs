@@ -41,7 +41,7 @@ public class Entity : IControl, IDrawable
             {
                 case 0: context.SetState("game"); break;
                 case 1: context.SetState("setting"); break;
-                case 2: context.SetState("exit"); break;
+                case 2: context.Stop(); break;
                 default: break;
             }
         }
