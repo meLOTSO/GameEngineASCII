@@ -2,5 +2,5 @@ namespace GameCore.Abstract.GameBasicFunctional;
 
 public interface IDrawable : IGameFunc
 {
-    public void Draw(GameContext context);
+    public void Draw(DrawContext context);
 }

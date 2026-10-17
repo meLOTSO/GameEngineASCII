@@ -29,13 +29,13 @@ public class Entity : IControl, IDrawable
         };
     }
 
-    public void OnKeyPress(GameContext context, ConsoleKey key, ConsoleModifiers modifiers)
+    public void OnKeyPress(GameContext context, ControlContext controlContext)
     {
-        if (key == ConsoleKey.DownArrow)
+        if (controlContext.Key == ConsoleKey.DownArrow)
             CurrentIndex++;
-        else if (key == ConsoleKey.UpArrow)
+        else if (controlContext.Key == ConsoleKey.UpArrow)
             CurrentIndex--;
-        else if (key == ConsoleKey.Enter)
+        else if (controlContext.Key == ConsoleKey.Enter)
         {
             switch (CurrentIndex)
             {
@@ -46,17 +46,20 @@ public class Entity : IControl, IDrawable
             }
         }
     }
-    public void Draw(GameContext context)
+    public void Draw(DrawContext context)
     {
         for (int i = 0; i < Menu.Count; i++)
         {
             if (i == CurrentIndex)
             {
-                Console.WriteLine($"> {Menu[i]}");
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine($"> {Menu[i].PadRight(10)}");
+                Console.ResetColor();
             }
             else
             {
-                Console.WriteLine(Menu[i]);
+                Console.WriteLine($"{Menu[i].PadRight(12)}");
             }
         }
     }

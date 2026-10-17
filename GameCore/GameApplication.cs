@@ -11,7 +11,9 @@ public class GameApplication : GameBase
     public IServiceCollection Services { get; init; } = new ServiceCollection();
     public int TargetDeltaTimeMS { get; set; } = 1000 / 60; // заданная дельта
     public float DeltaTimeSeconds { get; private set; } // фактическая дельта
-    public GameContext Context { get; private set; }
+    public GameContext GameContext { get; private set; }
+    public ControlContext ControlContext { get; set; } = new();
+    public DrawContext DrawContext { get; set; } = new();
 
     public Action? PreFrame { get; set; }
 
@@ -21,22 +23,25 @@ public class GameApplication : GameBase
         OnKeyPressCollection = gameBase.OnKeyPressCollection;
         DrawCollection = gameBase.DrawCollection;
     }
-    public GameApplication() => Context = new GameContext(this);
+    public GameApplication()
+    {
+        GameContext = new GameContext(this);
+    }
 
     private void Update()
     {
-        foreach (var u in UpdateCollection.ToArray())
+        foreach (var u in UpdateCollection)
         {
-            u.Invoke(Context);
+            u.Invoke(GameContext);
         }
     }
 
     private void Draw()
     {
         Console.SetCursorPosition(0, 0);
-        foreach (var d in DrawCollection.ToArray())
+        foreach (var d in DrawCollection)
         {
-            d.Invoke(Context);
+            d.Invoke(DrawContext);
         }
     }
 
@@ -45,11 +50,17 @@ public class GameApplication : GameBase
         if (Console.KeyAvailable)
         {
             ConsoleKeyInfo key = Console.ReadKey(intercept: true);
-            foreach (var c in OnKeyPressCollection.ToArray())
+            ControlContext.Pressed = true;
+            ControlContext.Key = key.Key;
+            ControlContext.Modifiers = key.Modifiers;
+            foreach (var c in OnKeyPressCollection)
             {
-                c.Invoke(Context, key.Key, key.Modifiers);
+                c.Invoke(GameContext, ControlContext);
             }
         }
+        ControlContext.Pressed = false;
+        ControlContext.Key = default;
+        ControlContext.Modifiers = default;
     }
 
     public void Run()

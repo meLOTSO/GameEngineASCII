@@ -1,3 +1,3 @@
 namespace GameCore.Delegates;
 
-public delegate void DrawDelegate(GameContext context);
+public delegate void DrawDelegate(DrawContext context);
